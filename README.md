@@ -1,6 +1,8 @@
 # AC Lap Analyzer
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/dashboardPt1.png)
+
+![Dashboard](screenshots/dashboardPt2.png)
 
 A real-time telemetry pipeline and ML coaching system for **Assetto Corsa** - reads live simulator data, detects corners, tracks lap performance, and delivers machine-learning-powered coaching insights across sessions.
 
