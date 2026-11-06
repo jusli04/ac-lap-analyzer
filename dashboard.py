@@ -181,8 +181,13 @@ if page == "📊 Dashboard":
     # ── Track map ──
     col_map, col_coaching = st.columns([1, 1])
 
+    # selected corner state
+    if "selected_corner" not in st.session_state:
+        st.session_state.selected_corner = None
+
     with col_map:
         st.subheader("Track Map")
+        sel = st.session_state.selected_corner
         fig_map = go.Figure()
         fig_map.add_trace(go.Scatter(
             x=df["x"], y=df["z"],
@@ -193,46 +198,95 @@ if page == "📊 Dashboard":
                 size=3,
                 cmin=df["speed_kmh"].min(),
                 cmax=df["speed_kmh"].max(),
-                colorbar=dict(title="km/h"),
+                colorbar=dict(title="km/h", x=-0.12, xanchor="right", thickness=12, len=0.7),
             ),
             name="Speed",
+            showlegend=False,
         ))
-        # Mark apexes
+        sf_s = max(samples, key=lambda s: s.track_position)
+        fig_map.add_trace(go.Scatter(
+            x=[sf_s.x], y=[sf_s.z],
+            mode="markers+text",
+            marker=dict(size=18, color="white", symbol="square"),
+            text=["S/F"],
+            textposition="top center",
+            showlegend=False,
+        ))
         for i, corner in enumerate(analysis.corners):
             apex_s = samples[corner.apex_idx]
+            is_sel = (sel == i)
             fig_map.add_trace(go.Scatter(
                 x=[apex_s.x], y=[apex_s.z],
                 mode="markers+text",
-                marker=dict(size=10, color="yellow"),
+                marker=dict(size=14 if is_sel else 8, color="cyan" if is_sel else "yellow", symbol="star" if is_sel else "circle"),
                 text=[f"C{i+1}"],
                 textposition="top center",
                 showlegend=False,
+                name=f"C{i+1}",
             ))
+            if is_sel:
+                entry_s = samples[corner.entry_idx]
+                exit_s  = samples[corner.exit_idx]
+                fig_map.add_trace(go.Scatter(
+                    x=[entry_s.x, apex_s.x, exit_s.x],
+                    y=[entry_s.z, apex_s.z, exit_s.z],
+                    mode="lines",
+                    line=dict(color="cyan", width=3, dash="dot"),
+                    showlegend=False,
+                    name="corner zone",
+                ))
+                if corner.brake_start_idx is not None:
+                    brake_s = samples[corner.brake_start_idx]
+                    fig_map.add_trace(go.Scatter(
+                        x=[brake_s.x], y=[brake_s.z],
+                        mode="markers+text",
+                        marker=dict(size=16, color="red", symbol="triangle-down"),
+                        text=["BRAKE"],
+                        textposition="bottom center",
+                        showlegend=False,
+                        name="brake point",
+                    ))
         fig_map.update_layout(
-            height=350,
+            height=400,
             template="plotly_dark",
             xaxis=dict(showticklabels=False),
             yaxis=dict(showticklabels=False, scaleanchor="x"),
-            margin=dict(l=0, r=0, t=0, b=0),
+            xaxis_autorange="reversed",
+            margin=dict(l=60, r=10, t=10, b=10),
+            modebar=dict(orientation="v", bgcolor="rgba(0,0,0,0.3)"),
         )
         st.plotly_chart(fig_map, use_container_width=True)
+        if sel is not None:
+            fb = analysis.feedback[sel]
+            tips = fb.issues + fb.positives
+            if tips:
+                tip_html = "".join(
+                    f'<div style="background:#1a1a2e;border-left:3px solid {"#ff4b4b" if t in fb.issues else "#00cc66"};padding:6px 10px;margin:3px 0;border-radius:0 4px 4px 0;font-size:0.85em">{"⚠" if t in fb.issues else "✓"} {t}</div>'
+                    for t in tips
+                )
+                st.markdown(f'<div style="margin-top:8px"><b>Corner {sel+1} tips:</b>{tip_html}</div>', unsafe_allow_html=True)
+            else:
+                st.success(f"Corner {sel+1}: Clean! Nothing to fix here.")
 
     with col_coaching:
         st.subheader("Corner-by-Corner Coaching")
-        for fb in analysis.feedback:
-            with st.expander(f"Corner {fb.corner_number}  —  {fb.overall}"):
+        st.caption("Click a corner to highlight it on the map")
+        for i, fb in enumerate(analysis.feedback):
+            border = "border:2px solid cyan;" if st.session_state.selected_corner == i else ""
+            label = f"Corner {fb.corner_number}  —  {fb.overall}"
+            with st.expander(label, expanded=(st.session_state.selected_corner == i)):
+                if st.button(f"Show on map", key=f"sel_corner_{i}_{selected_idx}"):
+                    st.session_state.selected_corner = i if st.session_state.selected_corner != i else None
+                    st.rerun()
                 if fb.issues:
                     st.markdown("**Issues:**")
                     for issue in fb.issues:
-                        st.markdown(f'<div class="issue-badge">⚠ {issue}</div>',
-                                    unsafe_allow_html=True)
+                        st.markdown(f'<div class="issue-badge">⚠ {issue}</div>', unsafe_allow_html=True)
                 if fb.positives:
                     st.markdown("**Positives:**")
                     for pos in fb.positives:
-                        st.markdown(f'<div class="positive-badge">✓ {pos}</div>',
-                                    unsafe_allow_html=True)
+                        st.markdown(f'<div class="positive-badge">✓ {pos}</div>', unsafe_allow_html=True)
 
-    # ── Lap comparison ──
     if len(analyses) > 1:
         st.markdown("---")
         st.subheader("Lap Comparison")
@@ -375,27 +429,62 @@ elif page == "🔴 Live Record":
 
     duration = st.slider("Max recording duration (seconds)", 60, 600, 300, step=30)
 
-    if st.button("▶ Start Recording"):
-        with st.spinner("Recording... Drive your laps! Press Ctrl+C in the terminal to stop early."):
-            recorder = LapRecorder(sample_rate_hz=20)
-            laps = recorder.record(duration_seconds=duration)
+    if "recording" not in st.session_state:
+        st.session_state.recording = False
+    if "recorder_laps" not in st.session_state:
+        st.session_state.recorder_laps = []
 
-        if laps:
-            st.session_state.laps = laps
-            save_laps(laps)
+    col_start, col_stop = st.columns([1, 1])
+    with col_start:
+        start_clicked = st.button("▶ Start Recording", disabled=st.session_state.recording)
+    with col_stop:
+        stop_clicked = st.button("⏹ Stop Recording", disabled=not st.session_state.recording)
 
-            best_lap = None
-            analyses = []
-            for i, lap in enumerate(laps):
-                analysis = analyze_lap(lap, i + 1, ref_samples=best_lap)
-                analyses.append(analysis)
-                if best_lap is None or lap[-1].lap_time_ms < best_lap[-1].lap_time_ms:
-                    best_lap = lap
-            st.session_state.analyses = analyses
+    if start_clicked:
+        import threading
+        st.session_state.recording = True
+        st.session_state.recorder_laps = []
+        stop_evt = threading.Event()
+        st.session_state["stop_event"] = stop_evt
+        recorder = LapRecorder(sample_rate_hz=20)
+        st.session_state["recorder_obj"] = recorder
+        def _run():
+            laps = recorder.record(duration_seconds=duration, stop_event=stop_evt)
+            st.session_state.recorder_laps = laps or []
+            st.session_state.recording = False
+        t = threading.Thread(target=_run, daemon=True)
+        t.start()
+        st.session_state["record_thread"] = t
+        st.rerun()
 
-            st.success(f"✅ Recorded {len(laps)} laps. Go to Dashboard to view analysis.")
-        else:
-            st.error("No laps recorded. Make sure AC is running and you completed at least one lap.")
+    if stop_clicked:
+        evt = st.session_state.get("stop_event")
+        if evt:
+            evt.set()
+        st.session_state.recording = False
+        st.rerun()
+
+    if st.session_state.recording:
+        st.info("🔴 Recording in progress - drive your laps, then click Stop Recording.")
+        st.stop()
+
+    laps = st.session_state.get("recorder_laps", [])
+    if not laps:
+        pass
+
+    if laps:
+        st.session_state.laps = laps
+        save_laps(laps)
+        best_lap = None
+        analyses = []
+        for i, lap in enumerate(laps):
+            analysis = analyze_lap(lap, i + 1, ref_samples=best_lap)
+            analyses.append(analysis)
+            if best_lap is None or lap[-1].lap_time_ms < best_lap[-1].lap_time_ms:
+                best_lap = lap
+        st.session_state.analyses = analyses
+        st.session_state.recorder_laps = []
+        st.success(f"✅ Recorded {len(laps)} laps. Go to Dashboard to view analysis.")
 
 
 # ── Load saved page ───────────────────────────────────────────────────────────

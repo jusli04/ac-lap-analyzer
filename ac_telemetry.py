@@ -193,7 +193,7 @@ class LapRecorder:
         self._current_lap: List[TelemetrySample] = []
         self._last_lap_count = -1
 
-    def record(self, duration_seconds: float = 300):
+    def record(self, duration_seconds: float = 300, stop_event=None):
         """Record telemetry for up to duration_seconds. Ctrl+C to stop early."""
         if not self.ac.connect():
             return
@@ -209,7 +209,7 @@ class LapRecorder:
 
         start = time.time()
         try:
-            while time.time() - start < duration_seconds:
+            while time.time() - start < duration_seconds and (stop_event is None or not stop_event.is_set()):
                 t0 = time.time()
 
                 phys = self.ac.get_physics()
