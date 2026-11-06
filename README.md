@@ -12,6 +12,15 @@ A real-time telemetry pipeline and ML coaching system for **Assetto Corsa** - re
 - **Cross-session persistence** - per-corner feature vectors serialized to JSON so the model sharpens over time
 - **Streamlit dashboard** - live track map, lap overlays, corner coaching cards, session leaderboard, cross-session ML insights
 
+## ML Coach Insights
+
+After 5+ laps on a car/track combo (across any number of sessions), the ML coach unlocks:
+- **Corner importance ranking** - which corners explain the most lap time variance
+- **Personal best targets** - how much time is available if you hit your best in every corner
+- **Anomaly detection** - flags corners that were significantly worse than your average
+
+![ML Coach Insights](screenshots/ml_coach.png)
+
 ## Setup
 
 Requirements: Windows, Python 3.9+, Assetto Corsa with Shared Memory enabled (Settings > General > Enable Shared Memory)
@@ -26,16 +35,9 @@ Requirements: Windows, Python 3.9+, Assetto Corsa with Shared Memory enabled (Se
 
 ## Run
 
-    python record.py          # record a session
+    python record.py            # record a session
     streamlit run dashboard.py  # view dashboard
-
-## How ML Coaching Works
-
-After 5+ laps on a car/track combo (across any number of sessions), the ML coach unlocks corner importance ranking, personal best targets, and anomaly detection - getting sharper the more you drive.
 
 ## Background
 
 Built to explore low-level systems programming (Windows IPC via shared memory), algorithm design (corner segmentation), and applied ML on real sensor data - the same kinds of high-frequency telemetry streams found in real automotive and robotics systems.
-
-
-![ML Coach Insights](screenshots/ml_coach.png)
