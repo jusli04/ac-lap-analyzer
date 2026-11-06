@@ -1,0 +1,7 @@
+﻿__pycache__/
+*.pyc
+*.pkl
+*.egg-info/
+venv/
+.env
+saved_sessions.json
