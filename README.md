@@ -40,6 +40,15 @@ Requirements: Windows, Python 3.9+, Assetto Corsa with Shared Memory enabled (Se
     python record.py            # record a session
     streamlit run dashboard.py  # view dashboard
 
+## Gamification
+
+The app includes a progression system to keep you coming back:
+
+- **Daily streak** - drive every day to keep your streak alive (like Snapchat)
+- **XP + Levels** - earn XP for every lap, session, and personal best. Level up from Rookie to The Surgeon
+- **Challenges** - beat personal bests, hit consistency targets, unlock ML coach, and more
+- **Titles** - Rookie → Hot Lap Hunter → Apex Chaser → Corner Surgeon → The Surgeon
+
 ## Background
 
 Built to explore low-level systems programming (Windows IPC via shared memory), algorithm design (corner segmentation), and applied ML on real sensor data - the same kinds of high-frequency telemetry streams found in real automotive and robotics systems.
