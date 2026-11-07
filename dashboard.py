@@ -18,6 +18,11 @@ from ml_coach import MLCoachState, update_history, analyze_lap_ml, compute_corne
 from history import (load_sessions, save_session, build_session_record,
                      progression_data, corner_history_heatmap, personal_bests,
                      load_ml_state_for_combo, total_laps_for_combo)
+from gamification import (
+    load_profile, save_profile, process_session, update_challenges,
+    award_xp, check_and_update_streak, streak_is_at_risk,
+    STATIC_CHALLENGES, PlayerProfile,
+)
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -64,6 +69,10 @@ if "ml_state" not in st.session_state:
     st.session_state.ml_state = MLCoachState()
 if "ml_insights" not in st.session_state:
     st.session_state.ml_insights = []
+if "profile" not in st.session_state:
+    st.session_state.profile = load_profile()
+if "gami_messages" not in st.session_state:
+    st.session_state.gami_messages = []
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -100,7 +109,26 @@ def samples_to_df(samples):
 st.sidebar.title("🏎️ AC Lap Analyzer")
 st.sidebar.markdown("---")
 
-page = st.sidebar.radio("View", ["📊 Dashboard", "🔴 Live Record", "📁 Load Saved", "📈 History"])
+page = st.sidebar.radio("View", ["📊 Dashboard", "🔴 Live Record", "📁 Load Saved", "📈 History", "🏆 Challenges"])
+
+# ── Gamification sidebar widget ───────────────────────────────────────────────
+st.sidebar.markdown("---")
+_p = st.session_state.profile
+_streak_color = "#ff6b35" if _p.streak > 0 else "#555"
+_at_risk = streak_is_at_risk(_p)
+_streak_label = f"🔥 {_p.streak}-day streak" if _p.streak > 0 else "🔥 No streak yet"
+if _at_risk:
+    _streak_label += " ⚠️"
+st.sidebar.markdown(f'''<div style="background:#1a1a2e;border-radius:8px;padding:12px 14px;margin-bottom:8px">
+<div style="font-size:1.1em;font-weight:bold;color:{_streak_color}">{_streak_label}</div>
+<div style="font-size:0.9em;color:#aaa;margin-top:2px">⚡ Level {_p.level} — {_p.title()}</div>
+<div style="margin-top:6px">
+<div style="background:#333;border-radius:4px;height:8px">
+<div style="background:linear-gradient(90deg,#f7971e,#ffd200);width:{min(int(_p.level_progress_pct()*100),100)}%;height:8px;border-radius:4px"></div>
+</div>
+<div style="font-size:0.75em;color:#888;margin-top:2px">{_p.xp} XP — {_p.xp_to_next()} to Level {_p.level+1}</div>
+</div>
+</div>''', unsafe_allow_html=True)
 
 # Load saved laps
 if st.sidebar.button("Load Saved Laps") or not st.session_state.laps:
@@ -484,7 +512,18 @@ elif page == "🔴 Live Record":
                 best_lap = lap
         st.session_state.analyses = analyses
         st.session_state.recorder_laps = []
+        # Gamification
+        sessions = load_sessions()
+        gami_msgs = process_session(
+            st.session_state.profile,
+            st.session_state.analyses,
+            sessions,
+            len(laps),
+        )
+        st.session_state.gami_messages = gami_msgs
         st.success(f"✅ Recorded {len(laps)} laps. Go to Dashboard to view analysis.")
+        for msg in gami_msgs:
+            st.info(msg)
 
 
 # ── Load saved page ───────────────────────────────────────────────────────────
@@ -780,3 +819,110 @@ elif page == "📈 History":
             st.rerun()
     else:
         st.info("No session loaded. Record or load laps first, then come back here to save.")
+
+
+# ── Challenges page ────────────────────────────────────────────────────────────────────────────────
+elif page == "🏆 Challenges":
+    p = st.session_state.profile
+    sessions = load_sessions()
+
+    # refresh challenge progress
+    update_challenges(p, st.session_state.analyses, sessions)
+    save_profile(p)
+
+    st.title("🏆 Challenges & Profile")
+
+    # ── Profile card ──
+    col_p1, col_p2, col_p3, col_p4 = st.columns(4)
+    col_p1.metric("Level", f"{p.level} — {p.title()}")
+    col_p2.metric("Total XP", p.xp)
+    col_p3.metric("🔥 Streak", f"{p.streak} days")
+    col_p4.metric("Longest Streak", f"{p.longest_streak} days")
+
+    # XP progress bar
+    pct = int(p.level_progress_pct() * 100)
+    st.markdown(f"""
+    <div style="margin:12px 0 4px 0;font-size:0.9em;color:#aaa">
+        Level {p.level} — {p.xp} XP &nbsp;|&nbsp; {p.xp_to_next()} XP to Level {p.level+1}
+    </div>
+    <div style="background:#2a2a3e;border-radius:6px;height:14px">
+        <div style="background:linear-gradient(90deg,#f7971e,#ffd200);width:{pct}%;height:14px;border-radius:6px;transition:width 0.3s"></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # ── Stats ──
+    st.subheader("📊 Your Stats")
+    sc1, sc2, sc3, sc4 = st.columns(4)
+    sc1.metric("Total Laps",     p.total_laps)
+    sc2.metric("Total Sessions", p.total_sessions)
+    sc3.metric("PB Improvements", p.pb_beats)
+    pb_str = f"{p.personal_best_ms//60000}:{(p.personal_best_ms%60000)/1000:.3f}" if p.personal_best_ms else "—"
+    sc4.metric("Personal Best",  pb_str)
+
+    st.markdown("---")
+
+    # ── Pending notifications ──
+    if st.session_state.gami_messages:
+        st.subheader("🔔 Recent Unlocks")
+        for msg in st.session_state.gami_messages:
+            st.success(msg)
+        if st.button("Clear notifications"):
+            st.session_state.gami_messages = []
+            st.rerun()
+        st.markdown("---")
+
+    # ── Challenge categories ──
+    challenge_map = {c.id: c for c in STATIC_CHALLENGES}
+    profile_map   = {c["id"]: c for c in p.challenges}
+
+    categories = ["milestone", "performance", "consistency", "exploration"]
+    cat_labels  = {
+        "milestone":   "🏁 Milestones",
+        "performance": "⚡ Performance",
+        "consistency": "⏱️ Consistency",
+        "exploration": "🧭 Exploration",
+    }
+
+    for cat in categories:
+        st.subheader(cat_labels[cat])
+        cat_challenges = [c for c in STATIC_CHALLENGES if c.category == cat]
+        completed = [c for c in cat_challenges if profile_map.get(c.id, {}).get("completed")]
+        pending   = [c for c in cat_challenges if not profile_map.get(c.id, {}).get("completed")]
+
+        for c in pending:
+            pc = profile_map.get(c.id, {"progress": 0.0, "completed": False})
+            prog = pc.get("progress", 0.0)
+            tgt  = c.target if c.target > 0 else 1
+            pct_c = min(int((prog / tgt) * 100), 100)
+            bar_color = "#00aaff"
+            st.markdown(f"""
+            <div style="background:#1a1a2e;border-radius:8px;padding:12px 14px;margin:6px 0;border-left:3px solid #333">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <span style="font-size:1.05em">{c.icon} <b>{c.name}</b></span>
+                    <span style="color:#ffd200;font-size:0.9em">+{c.xp_reward} XP</span>
+                </div>
+                <div style="color:#aaa;font-size:0.85em;margin:4px 0">{c.description}</div>
+                <div style="background:#2a2a3e;border-radius:4px;height:6px;margin-top:6px">
+                    <div style="background:{bar_color};width:{pct_c}%;height:6px;border-radius:4px"></div>
+                </div>
+                <div style="font-size:0.75em;color:#666;margin-top:2px">{int(prog)}/{int(tgt)}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        for c in completed:
+            st.markdown(f"""
+            <div style="background:#0d1f0d;border-radius:8px;padding:10px 14px;margin:4px 0;border-left:3px solid #00cc66;opacity:0.75">
+                <span style="color:#00cc66">✓</span> <b>{c.name}</b>
+                <span style="color:#555;font-size:0.85em;margin-left:8px">{c.description}</span>
+                <span style="float:right;color:#00cc66;font-size:0.85em">+{c.xp_reward} XP earned</span>
+            </div>
+            """, unsafe_allow_html=True)
+
+    # ── XP log ──
+    if p.xp_log:
+        st.markdown("---")
+        with st.expander("📜 XP History"):
+            for entry in reversed(p.xp_log[-20:]):
+                st.markdown(f"**+{entry['amount']} XP** — {entry['reason']} _{entry['date']}_")
