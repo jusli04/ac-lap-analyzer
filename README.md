@@ -49,6 +49,14 @@ The app includes a progression system to keep you coming back:
 - **Challenges** - beat personal bests, hit consistency targets, unlock ML coach, and more
 - **Titles** - Rookie → Hot Lap Hunter → Apex Chaser → Corner Surgeon → The Surgeon
 
+## Documentation
+
+Detailed writeups on each system:
+
+- [ML Coach](docs/ML_COACH.md) — regression model, corner features, anomaly detection, cross-session persistence
+- [Recording System](docs/RECORDING.md) — shared memory pipeline, lap boundary detection, sample structure
+- [Gamification](docs/GAMIFICATION.md) — XP system, streaks, challenges, titles
+
 ## Background
 
 Built to explore low-level systems programming (Windows IPC via shared memory), algorithm design (corner segmentation), and applied ML on real sensor data - the same kinds of high-frequency telemetry streams found in real automotive and robotics systems.
