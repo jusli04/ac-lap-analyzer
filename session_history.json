@@ -1840,5 +1840,531 @@
         }
       ]
     }
+  },
+  {
+    "session_id": "2026-11-05T21:07:34.880858",
+    "date": "2026-11-05 21:07",
+    "track": "Brands Hatch",
+    "car": "Porsche 911 992.2 Weissach Package Tuned",
+    "laps_driven": 5,
+    "best_lap_ms": 52085,
+    "avg_lap_ms": 60903,
+    "best_lap_number": 2,
+    "total_issues": 41,
+    "avg_apex_speed": 76.72508726529777,
+    "top_insight": "Corner 4 has the biggest impact on lap time (57% importance, ~-0.38s per km/h at apex).",
+    "corner_summaries": [
+      {
+        "corner_number": 4,
+        "avg_apex_speed": 99.28609466552734,
+        "best_apex_speed": 114.5684814453125,
+        "importance_score": 0.5659092094245946
+      },
+      {
+        "corner_number": 1,
+        "avg_apex_speed": 70.75347921922803,
+        "best_apex_speed": 119.77986907958984,
+        "importance_score": 0.4535468997703847
+      },
+      {
+        "corner_number": 3,
+        "avg_apex_speed": 86.94121856689453,
+        "best_apex_speed": 135.01068115234375,
+        "importance_score": 0.41592924974751233
+      },
+      {
+        "corner_number": 5,
+        "avg_apex_speed": 72.63697052001953,
+        "best_apex_speed": 91.55972290039062,
+        "importance_score": 0.08790747191057133
+      },
+      {
+        "corner_number": 2,
+        "avg_apex_speed": 49.688514709472656,
+        "best_apex_speed": 63.4019660949707,
+        "importance_score": 0.032418370386296
+      }
+    ],
+    "ml_corner_history": {
+      "1": [
+        {
+          "apex_speed": 119.77986907958984,
+          "entry_speed": 145.4881591796875,
+          "exit_speed": 119.77986907958984,
+          "brake_dist": 0,
+          "max_brake": 0.0,
+          "lap_time_ms": 82678
+        },
+        {
+          "apex_speed": 56.21415710449219,
+          "entry_speed": 106.07203674316406,
+          "exit_speed": 61.66586685180664,
+          "brake_dist": 31,
+          "max_brake": 1.0,
+          "lap_time_ms": 52085
+        },
+        {
+          "apex_speed": 104.93865203857422,
+          "entry_speed": 140.65269470214844,
+          "exit_speed": 109.76744079589844,
+          "brake_dist": 4,
+          "max_brake": 0.0,
+          "lap_time_ms": 55961
+        },
+        {
+          "apex_speed": 72.83064270019531,
+          "entry_speed": 144.93829345703125,
+          "exit_speed": 72.9888916015625,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 53668
+        },
+        {
+          "apex_speed": 0.0040751732885837555,
+          "entry_speed": 0.6266378164291382,
+          "exit_speed": 11.609253883361816,
+          "brake_dist": 2,
+          "max_brake": 0.0,
+          "lap_time_ms": 60124
+        }
+      ],
+      "2": [
+        {
+          "apex_speed": 50.33173751831055,
+          "entry_speed": 89.50743865966797,
+          "exit_speed": 51.118804931640625,
+          "brake_dist": 29,
+          "max_brake": 0.0,
+          "lap_time_ms": 82678
+        },
+        {
+          "apex_speed": 63.4019660949707,
+          "entry_speed": 100.7615966796875,
+          "exit_speed": 64.00930786132812,
+          "brake_dist": 29,
+          "max_brake": 1.0,
+          "lap_time_ms": 52085
+        },
+        {
+          "apex_speed": 14.180835723876953,
+          "entry_speed": 130.65260314941406,
+          "exit_speed": 22.217376708984375,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 55961
+        },
+        {
+          "apex_speed": 62.92997360229492,
+          "entry_speed": 88.77527618408203,
+          "exit_speed": 68.45914459228516,
+          "brake_dist": 6,
+          "max_brake": 1.0,
+          "lap_time_ms": 53668
+        },
+        {
+          "apex_speed": 57.598060607910156,
+          "entry_speed": 76.430908203125,
+          "exit_speed": 61.33948516845703,
+          "brake_dist": 28,
+          "max_brake": 0.0,
+          "lap_time_ms": 60124
+        }
+      ],
+      "3": [
+        {
+          "apex_speed": 73.30004119873047,
+          "entry_speed": 118.51227569580078,
+          "exit_speed": 76.21312713623047,
+          "brake_dist": 32,
+          "max_brake": 1.0,
+          "lap_time_ms": 82678
+        },
+        {
+          "apex_speed": 135.01068115234375,
+          "entry_speed": 178.32040405273438,
+          "exit_speed": 136.8273162841797,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 52085
+        },
+        {
+          "apex_speed": 70.98534393310547,
+          "entry_speed": 129.44276428222656,
+          "exit_speed": 73.55752563476562,
+          "brake_dist": 9,
+          "max_brake": 1.0,
+          "lap_time_ms": 55961
+        },
+        {
+          "apex_speed": 77.09059143066406,
+          "entry_speed": 96.46145629882812,
+          "exit_speed": 80.06556701660156,
+          "brake_dist": 26,
+          "max_brake": 1.0,
+          "lap_time_ms": 53668
+        },
+        {
+          "apex_speed": 78.3194351196289,
+          "entry_speed": 91.11251068115234,
+          "exit_speed": 79.60507202148438,
+          "brake_dist": 30,
+          "max_brake": 0.0470588281750679,
+          "lap_time_ms": 60124
+        }
+      ],
+      "4": [
+        {
+          "apex_speed": 114.5684814453125,
+          "entry_speed": 158.29928588867188,
+          "exit_speed": 114.5684814453125,
+          "brake_dist": 20,
+          "max_brake": 0.0,
+          "lap_time_ms": 82678
+        },
+        {
+          "apex_speed": 75.3855972290039,
+          "entry_speed": 110.80384826660156,
+          "exit_speed": 76.58573913574219,
+          "brake_dist": 0,
+          "max_brake": 0.29411765933036804,
+          "lap_time_ms": 52085
+        },
+        {
+          "apex_speed": 83.10636901855469,
+          "entry_speed": 169.11172485351562,
+          "exit_speed": 83.10636901855469,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 55961
+        },
+        {
+          "apex_speed": 111.35355377197266,
+          "entry_speed": 147.2916259765625,
+          "exit_speed": 113.74596405029297,
+          "brake_dist": 13,
+          "max_brake": 1.0,
+          "lap_time_ms": 53668
+        },
+        {
+          "apex_speed": 112.01647186279297,
+          "entry_speed": 117.3532485961914,
+          "exit_speed": 117.12654876708984,
+          "brake_dist": 0,
+          "max_brake": 0.0,
+          "lap_time_ms": 60124
+        }
+      ],
+      "5": [
+        {
+          "apex_speed": 76.48530578613281,
+          "entry_speed": 147.4396209716797,
+          "exit_speed": 76.80489349365234,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 82678
+        },
+        {
+          "apex_speed": 91.55972290039062,
+          "entry_speed": 102.16075897216797,
+          "exit_speed": 96.43675231933594,
+          "brake_dist": 0,
+          "max_brake": 0.0,
+          "lap_time_ms": 52085
+        },
+        {
+          "apex_speed": 53.982269287109375,
+          "entry_speed": 114.90731048583984,
+          "exit_speed": 53.982269287109375,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 55961
+        },
+        {
+          "apex_speed": 64.92737579345703,
+          "entry_speed": 93.96957397460938,
+          "exit_speed": 65.41089630126953,
+          "brake_dist": 19,
+          "max_brake": 1.0,
+          "lap_time_ms": 53668
+        },
+        {
+          "apex_speed": 76.23017883300781,
+          "entry_speed": 114.03726196289062,
+          "exit_speed": 76.37051391601562,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 60124
+        }
+      ],
+      "6": [
+        {
+          "apex_speed": 90.74859619140625,
+          "entry_speed": 90.74859619140625,
+          "exit_speed": 94.2770767211914,
+          "brake_dist": 37,
+          "max_brake": 0.0,
+          "lap_time_ms": 60124
+        }
+      ]
+    }
+  },
+  {
+    "session_id": "2026-11-05T21:15:26.222949",
+    "date": "2026-11-05 21:15",
+    "track": "Brands Hatch",
+    "car": "Porsche 911 992.2 Weissach Package Tuned",
+    "laps_driven": 5,
+    "best_lap_ms": 50201,
+    "avg_lap_ms": 56738,
+    "best_lap_number": 3,
+    "total_issues": 40,
+    "avg_apex_speed": 85.76511706034343,
+    "top_insight": "Corner 2 has the biggest impact on lap time (83% importance, ~-0.29s per km/h at apex).",
+    "corner_summaries": [
+      {
+        "corner_number": 2,
+        "avg_apex_speed": 78.73045501708984,
+        "best_apex_speed": 127.96173095703125,
+        "importance_score": 0.8258809177483651
+      },
+      {
+        "corner_number": 1,
+        "avg_apex_speed": 85.26311798095703,
+        "best_apex_speed": 128.5834197998047,
+        "importance_score": 0.3874938261030018
+      },
+      {
+        "corner_number": 3,
+        "avg_apex_speed": 77.64210510253906,
+        "best_apex_speed": 101.75414276123047,
+        "importance_score": 0.26247168320080166
+      },
+      {
+        "corner_number": 4,
+        "avg_apex_speed": 115.94453430175781,
+        "best_apex_speed": 133.34356689453125,
+        "importance_score": 0.2040889298361529
+      },
+      {
+        "corner_number": 5,
+        "avg_apex_speed": 86.10208702087402,
+        "best_apex_speed": 114.75543975830078,
+        "importance_score": 0.11000823566452936
+      }
+    ],
+    "ml_corner_history": {
+      "1": [
+        {
+          "apex_speed": 63.501895904541016,
+          "entry_speed": 92.33126831054688,
+          "exit_speed": 73.08622741699219,
+          "brake_dist": 3,
+          "max_brake": 0.0,
+          "lap_time_ms": 77563
+        },
+        {
+          "apex_speed": 48.733638763427734,
+          "entry_speed": 194.99525451660156,
+          "exit_speed": 48.733638763427734,
+          "brake_dist": 16,
+          "max_brake": 1.0,
+          "lap_time_ms": 53456
+        },
+        {
+          "apex_speed": 69.66403198242188,
+          "entry_speed": 175.23902893066406,
+          "exit_speed": 69.66403198242188,
+          "brake_dist": 8,
+          "max_brake": 1.0,
+          "lap_time_ms": 50201
+        },
+        {
+          "apex_speed": 115.83260345458984,
+          "entry_speed": 145.84609985351562,
+          "exit_speed": 118.09534454345703,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 50816
+        },
+        {
+          "apex_speed": 128.5834197998047,
+          "entry_speed": 185.93780517578125,
+          "exit_speed": 128.5834197998047,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 51654
+        }
+      ],
+      "2": [
+        {
+          "apex_speed": 127.96173095703125,
+          "entry_speed": 145.03799438476562,
+          "exit_speed": 127.96173095703125,
+          "brake_dist": 50,
+          "max_brake": 0.0,
+          "lap_time_ms": 77563
+        },
+        {
+          "apex_speed": 62.1161003112793,
+          "entry_speed": 133.02944946289062,
+          "exit_speed": 64.56787872314453,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 53456
+        },
+        {
+          "apex_speed": 53.30099868774414,
+          "entry_speed": 149.51417541503906,
+          "exit_speed": 53.82008361816406,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 50201
+        },
+        {
+          "apex_speed": 50.74305725097656,
+          "entry_speed": 96.1431884765625,
+          "exit_speed": 51.78530502319336,
+          "brake_dist": 39,
+          "max_brake": 1.0,
+          "lap_time_ms": 50816
+        },
+        {
+          "apex_speed": 99.53038787841797,
+          "entry_speed": 127.63748168945312,
+          "exit_speed": 103.86173248291016,
+          "brake_dist": 29,
+          "max_brake": 1.0,
+          "lap_time_ms": 51654
+        }
+      ],
+      "3": [
+        {
+          "apex_speed": 69.10474395751953,
+          "entry_speed": 114.2608871459961,
+          "exit_speed": 69.28610229492188,
+          "brake_dist": 17,
+          "max_brake": 1.0,
+          "lap_time_ms": 77563
+        },
+        {
+          "apex_speed": 71.39934539794922,
+          "entry_speed": 119.09143829345703,
+          "exit_speed": 73.08164978027344,
+          "brake_dist": 29,
+          "max_brake": 1.0,
+          "lap_time_ms": 53456
+        },
+        {
+          "apex_speed": 99.48084259033203,
+          "entry_speed": 126.75442504882812,
+          "exit_speed": 102.85163879394531,
+          "brake_dist": 7,
+          "max_brake": 0.0,
+          "lap_time_ms": 50201
+        },
+        {
+          "apex_speed": 101.75414276123047,
+          "entry_speed": 112.4941635131836,
+          "exit_speed": 106.93409729003906,
+          "brake_dist": 34,
+          "max_brake": 0.0,
+          "lap_time_ms": 50816
+        },
+        {
+          "apex_speed": 46.47145080566406,
+          "entry_speed": 141.4628143310547,
+          "exit_speed": 46.82008361816406,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 51654
+        }
+      ],
+      "4": [
+        {
+          "apex_speed": 133.34356689453125,
+          "entry_speed": 167.53656005859375,
+          "exit_speed": 133.34548950195312,
+          "brake_dist": 4,
+          "max_brake": 0.0,
+          "lap_time_ms": 53456
+        },
+        {
+          "apex_speed": 127.00472259521484,
+          "entry_speed": 202.40875244140625,
+          "exit_speed": 127.00472259521484,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 50201
+        },
+        {
+          "apex_speed": 114.07658386230469,
+          "entry_speed": 199.1174774169922,
+          "exit_speed": 116.25574493408203,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 50816
+        },
+        {
+          "apex_speed": 89.35326385498047,
+          "entry_speed": 110.94303894042969,
+          "exit_speed": 95.45870971679688,
+          "brake_dist": 20,
+          "max_brake": 1.0,
+          "lap_time_ms": 51654
+        }
+      ],
+      "5": [
+        {
+          "apex_speed": 71.78700256347656,
+          "entry_speed": 134.12979125976562,
+          "exit_speed": 72.56854248046875,
+          "brake_dist": 12,
+          "max_brake": 1.0,
+          "lap_time_ms": 53456
+        },
+        {
+          "apex_speed": 78.42001342773438,
+          "entry_speed": 99.08855438232422,
+          "exit_speed": 83.45254516601562,
+          "brake_dist": 36,
+          "max_brake": 0.0,
+          "lap_time_ms": 50201
+        },
+        {
+          "apex_speed": 79.44589233398438,
+          "entry_speed": 103.1307373046875,
+          "exit_speed": 80.34037017822266,
+          "brake_dist": 18,
+          "max_brake": 0.0,
+          "lap_time_ms": 50816
+        },
+        {
+          "apex_speed": 114.75543975830078,
+          "entry_speed": 166.6753692626953,
+          "exit_speed": 114.75543975830078,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 51654
+        }
+      ],
+      "6": [
+        {
+          "apex_speed": 83.08391571044922,
+          "entry_speed": 92.24166870117188,
+          "exit_speed": 84.19886016845703,
+          "brake_dist": 32,
+          "max_brake": 0.0,
+          "lap_time_ms": 53456
+        },
+        {
+          "apex_speed": 34.99177169799805,
+          "entry_speed": 142.0789794921875,
+          "exit_speed": 34.99177169799805,
+          "brake_dist": 0,
+          "max_brake": 1.0,
+          "lap_time_ms": 51654
+        }
+      ]
+    }
   }
 ]
