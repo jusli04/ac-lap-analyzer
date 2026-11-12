@@ -18,6 +18,9 @@ from ml_coach import MLCoachState, compute_corner_stats
 
 HISTORY_PATH = Path("session_history.json")
 
+# Minimum realistic lap time — anything below is a spurious AC ghost event
+MIN_LAP_MS = 50_000  # 50 seconds
+
 
 # ── Data structures ───────────────────────────────────────────────────────────
 
@@ -64,9 +67,19 @@ def build_session_record(
 ) -> SessionRecord:
     """
     Build a SessionRecord from a completed recording session.
+    Ghost laps (< 50 seconds) are filtered out before computing stats.
     """
     if not analyses:
         raise ValueError("No laps to summarize")
+
+    # Filter out ghost laps (spurious AC lap boundary events with tiny times)
+    valid_analyses = [a for a in analyses if a.lap_time_ms >= MIN_LAP_MS]
+    if not valid_analyses:
+        raise ValueError("No valid laps to summarize (all laps were below the 50-second minimum)")
+    if len(valid_analyses) < len(analyses):
+        ghost_count = len(analyses) - len(valid_analyses)
+        print(f"[history] Filtered {ghost_count} ghost lap(s) with time < {MIN_LAP_MS}ms")
+    analyses = valid_analyses
 
     now = datetime.now()
     session_id = now.isoformat()
@@ -127,6 +140,10 @@ def build_session_record(
 
 def save_session(record: SessionRecord, path: Path = HISTORY_PATH):
     """Append a session record to the history JSON file."""
+    # Guard: refuse to save a session whose best lap is a ghost time
+    if record.best_lap_ms < MIN_LAP_MS:
+        print(f"[history] Refusing to save ghost session (best_lap_ms={record.best_lap_ms})")
+        return
     history = load_history(path)
     # Replace if same session_id exists (re-run scenario)
     history = [h for h in history if h["session_id"] != record.session_id]
